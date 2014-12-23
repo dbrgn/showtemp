@@ -68,5 +68,5 @@ fn main() {
     let measurement: Measurement = json::decode(body.as_slice()).unwrap();
 
     // Output data
-    println!("{}°C {}h {}mm", measurement.temperature, measurement.sunshine, measurement.precipitation);
+    println!("{}C {}h {}mm", measurement.temperature, measurement.sunshine, measurement.precipitation);
 }
