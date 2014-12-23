@@ -1,0 +1,8 @@
+[package]
+
+name = "showtemp"
+version = "0.0.1"
+authors = ["Danilo Bargen <danilo.bargen@webrepublic.ch>"]
+
+[dependencies.hyper]
+git = "https://github.com/hyperium/hyper"
