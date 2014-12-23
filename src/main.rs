@@ -1,11 +1,41 @@
 extern crate hyper;
+extern crate serialize;
 
 use std::os;
-use std::io::stdout;
-use std::io::util::copy;
+
+use serialize::json;
 
 use hyper::Client;
 
+
+#[allow(non_snake_case)]
+#[deriving(Show, Decodable, Encodable)]
+struct Station {
+    code: String,
+    name: String,
+    ch1903X: u32,
+    ch1903Y: u32,
+    lat: f32,
+    lng: f32,
+}
+
+#[allow(non_snake_case)]
+#[deriving(Show, Decodable, Encodable)]
+struct Measurement {
+    //station: Station,
+    code: String,
+    dateTime: String,
+    temperature: f32,
+    sunshine: u8,
+    precipitation: f32,
+    windDirection: u16,
+    windSpeed: f32,
+    qnhPressure: f32,
+    gustPeak: f32,
+    humidity: u8,
+    qfePressure: f32,
+    qffPressure: f32,
+}
 
 fn main() {
     // Argument parsing
@@ -60,10 +90,10 @@ fn main() {
         Err(err) => panic!("Failed to connect: {}", err)
     };
 
-    println!("Response: {}", res.status);
-    println!("Headers:\n{}", res.headers);
-    match copy(&mut res, &mut stdout()) {
-        Ok(..) => (),
-        Err(e) => panic!("Stream failure: {}", e)
+    let body = match res.read_to_string() {
+        Ok(body) => body,
+        Err(e) => panic!("Error while reading body: {}", e)
     };
+    let decoded: Measurement = json::decode(body.as_slice()).unwrap();
+    println!("{}", decoded);
 }
